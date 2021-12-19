@@ -1,0 +1,53 @@
+{% extends 'base_app/main.html' %}
+{% block content %}
+
+
+    <div class="header-bar">
+        <div>
+            <h1>Hello {{request.user|title}}</h1>
+            <h3 style="margin:0">You have <i>{{count}}</i> incomplete task{{count|pluralize:"s"}} </h3>
+        </div>
+        {% if user.is_authenticated %}
+    <a href="{% url 'logout' %}">Logout</a>
+    {% else %}
+    <a href="{% url 'login' %}">Login</a>
+    {% endif %}
+    </div>
+    
+    <hr>
+    <div id="search-add-wrapper">
+        <form  method="get" style="margin-top:20px; display:flex">
+            <input type="text" name="search-area" value="{{search_input}}">
+            <input class="button" type="submit" value="Submit">
+        </form>
+        <a id="add-link" href="{% url 'task-create' %}">&#x2b;</a>
+    </div>
+     
+    
+    
+
+
+    <div class="task-items-wrapper">
+        {% for list in object_list %}
+            <div class="task-wrapper">
+                {% if list.complete %}
+                    <div class="task-title">
+                        <div class="task-complete-icon"></div>
+                        <i><s><a href="{% url 'task-update' list.pk %}">{{list}}</a></s></i>
+                    </div>
+                    <a class="delete-link" href="{% url 'task-delete' list.pk %}">&#215;</a>
+                {% else %}
+                <div class="task-title">
+                    <div class="task-incomplete-icon"></div>
+                   <a href="{% url 'task-update' list.pk %}">{{list}}</a>
+                </div>
+                <a class="delete-link" href="{% url 'task-delete' list.pk %}">&#215;</a>
+                {% endif %}
+                
+            </div>
+        {% empty %}
+            <h4>No list found....</h4>
+        {% endfor %}
+    </div>
+    
+    {% endblock content %}
